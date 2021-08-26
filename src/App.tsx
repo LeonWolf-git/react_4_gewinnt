@@ -219,19 +219,25 @@ class App extends React.Component<{}, State> {
     if (gameState === GameState.Ongoing) {
       text = 'Spiel läuft noch! - Spieler ' +  playerTurn + ' ist dran!';
       textStyle = styleGameOngoing;
+      return this.gameIsOngoing(text, textStyle, playerOneWins, playerTwoWins);
     } else if (gameState === GameState.Draw) {
       text = 'Spiel ist unentschieden!';
       textStyle = styleGameEnded;
+      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
     } else if (gameState === GameState.PlayerOneWin) {
       playerOneWins++;
       text = 'Spieler 1 hat gewonnen!';
       textStyle = styleGameEnded;
+      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
     } else if (gameState === GameState.PlayerTwoWin) {
       playerTwoWins++;
       text = 'Spieler 2 hat gewonnen!'
       textStyle = styleGameEnded;
+      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
     }
+  }
 
+  public gameHasWinner = (text, textStyle, playerOneWins, playerTwoWins) => {
     return (
       <div style={textStyle}>
         {text}
@@ -241,10 +247,27 @@ class App extends React.Component<{}, State> {
           <span className="textRed"> -    Spieler 2 </span>
         </div>
         <div>
-          <button className="resetButton" onClick={() => this.resetBoard(playerOneWins, playerTwoWins)}> Reset Spielbrett </button>
+          <button className="resetButton" id="btnRunde" onClick={() => this.resetBoard(playerOneWins, playerTwoWins)}> Nächste Runde </button>
+          <button className="resetButton" onClick={() => this.resetBoard(0, 0)}> Neues Spiel </button>
         </div>
       </div>
-    )
+    );
+  }
+
+  public gameIsOngoing = (text, textStyle, playerOneWins, playerTwoWins) => {
+    return (
+      <div style={textStyle}>
+        {text}
+        <div>
+          <span className="textYellow"> Spieler 1    - </span>
+          <span>{playerOneWins} : {playerTwoWins}</span>
+          <span className="textRed"> -    Spieler 2 </span>
+        </div>
+        <div>
+          <button className="resetButton" onClick={() => this.resetBoard(0, 0)}> Neues Spiel </button>
+        </div>
+      </div>
+    );
   }
 
   public resetBoard = (currentPlayerOneWins, currentPlayerTwoWins) => {
