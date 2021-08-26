@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "4-gewinnt",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,5 +19,18 @@
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.1",
     "typescript": "^3.3.3"
-  }
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonWolf-git/react_4_gewinnt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeonWolf-git/react_4_gewinnt/issues"
+  },
+  "homepage": "https://github.com/LeonWolf-git/react_4_gewinnt#readme",
+  "description": ""
 }
