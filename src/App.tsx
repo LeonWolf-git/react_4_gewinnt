@@ -201,72 +201,42 @@ class App extends React.Component<{}, State> {
   };
 
   public renderGameStatus = () => {
-    let textStyle;
-
     let { playerTurn, gameState, playerOneWins, playerTwoWins } = this.state
 
-    const styleGameEnded = {
-      fontSize: 50,
-      padding: 20
-    }
-
-    const styleGameOngoing = {
-      fontSize: 50,
-      padding: 20
-    }
+    let gameStillGoing: boolean = true;
 
     let text
     if (gameState === GameState.Ongoing) {
       text = 'Spiel läuft noch! - Spieler ' +  playerTurn + ' ist dran!';
-      textStyle = styleGameOngoing;
-      return this.gameIsOngoing(text, textStyle, playerOneWins, playerTwoWins);
     } else if (gameState === GameState.Draw) {
       text = 'Spiel ist unentschieden!';
-      textStyle = styleGameEnded;
-      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
+      gameStillGoing = false;
     } else if (gameState === GameState.PlayerOneWin) {
       playerOneWins++;
       text = 'Spieler 1 hat gewonnen!';
-      textStyle = styleGameEnded;
-      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
+      gameStillGoing = false;
     } else if (gameState === GameState.PlayerTwoWin) {
       playerTwoWins++;
       text = 'Spieler 2 hat gewonnen!'
-      textStyle = styleGameEnded;
-      return this.gameHasWinner(text, textStyle, playerOneWins, playerTwoWins);
+      gameStillGoing = false;
     }
-  }
 
-  public gameHasWinner = (text, textStyle, playerOneWins, playerTwoWins) => {
     return (
-      <div style={textStyle}>
-        {text}
-        <div>
-          <span className="textYellow"> Spieler 1    - </span>
-          <span>{playerOneWins} : {playerTwoWins}</span>
-          <span className="textRed"> -    Spieler 2 </span>
+        <div className="textHeaderStyle">
+          {text}
+          <div>
+            <span className="textYellow"> Spieler 1    - </span>
+            <span>{playerOneWins} : {playerTwoWins}</span>
+            <span className="textRed"> -    Spieler 2 </span>
+          </div>
+          <div>
+            {!gameStillGoing && (
+            <button className="resetButton" id="btnRunde" onClick={
+              () => this.resetBoard(playerOneWins, playerTwoWins)}> Nächste Runde </button>
+            )}
+            <button className="resetButton" onClick={() => this.resetBoard(0, 0)}> Neues Spiel </button>
+          </div>
         </div>
-        <div>
-          <button className="resetButton" id="btnRunde" onClick={() => this.resetBoard(playerOneWins, playerTwoWins)}> Nächste Runde </button>
-          <button className="resetButton" onClick={() => this.resetBoard(0, 0)}> Neues Spiel </button>
-        </div>
-      </div>
-    );
-  }
-
-  public gameIsOngoing = (text, textStyle, playerOneWins, playerTwoWins) => {
-    return (
-      <div style={textStyle}>
-        {text}
-        <div>
-          <span className="textYellow"> Spieler 1    - </span>
-          <span>{playerOneWins} : {playerTwoWins}</span>
-          <span className="textRed"> -    Spieler 2 </span>
-        </div>
-        <div>
-          <button className="resetButton" onClick={() => this.resetBoard(0, 0)}> Neues Spiel </button>
-        </div>
-      </div>
     );
   }
 
