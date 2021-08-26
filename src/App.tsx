@@ -19,10 +19,12 @@ type Board = Player[];
 interface State {
   board: Board;
   playerTurn: Player;
-  gameState: GameState | Player
+  gameState: GameState | Player;
+  playerOneWins: number;
+  playerTwoWins: number;
 }
 
-const intitializeBoard = () => {
+const initializeBoard = () => {
   const board = [];
   for (let i = 0; i < 42; i++) {
     board.push(Player.None);
@@ -129,7 +131,6 @@ const checkForRow = (board: Player[]) => {
   ) {
     return board[1];
   }
-
   return false;
 };
 
@@ -137,9 +138,11 @@ const checkForRow = (board: Player[]) => {
 class App extends React.Component<{}, State> {
 
   state: State = {
-    board: intitializeBoard(),
+    board: initializeBoard(),
     playerTurn: Player.One,
-    gameState: GameState.Ongoing
+    gameState: GameState.Ongoing,
+    playerOneWins: 0,
+    playerTwoWins: 0,
   };
 
   public renderCells = () => {
@@ -158,8 +161,7 @@ class App extends React.Component<{}, State> {
   };
 
   public makeMove(column: number) {
-    const {board, playerTurn} = this.state;
-    console.log(playerTurn)
+    const {board, playerTurn, playerOneWins, playerTwoWins} = this.state;
 
     const index = getLowestIndex(board, column);
 
@@ -167,7 +169,9 @@ class App extends React.Component<{}, State> {
       this.setState({
         board: board,
         playerTurn: playerTurn,
-        gameState: getGameState(board)
+        gameState: getGameState(board),
+        playerOneWins: playerOneWins,
+        playerTwoWins: playerTwoWins
       })
     } else {
       const newBoard = board.slice();
@@ -178,7 +182,9 @@ class App extends React.Component<{}, State> {
       this.setState({
         board: newBoard,
         playerTurn: togglePlayerTurn(playerTurn),
-        gameState
+        gameState,
+        playerOneWins: playerOneWins,
+        playerTwoWins: playerTwoWins
       })
     }
   };
@@ -197,7 +203,7 @@ class App extends React.Component<{}, State> {
   public renderGameStatus = () => {
     let textStyle;
 
-    const { playerTurn, gameState } = this.state
+    let { playerTurn, gameState, playerOneWins, playerTwoWins } = this.state
 
     const styleGameEnded = {
       fontSize: 50,
@@ -217,22 +223,39 @@ class App extends React.Component<{}, State> {
       text = 'Spiel ist unentschieden!';
       textStyle = styleGameEnded;
     } else if (gameState === GameState.PlayerOneWin) {
+      playerOneWins++;
       text = 'Spieler 1 hat gewonnen!';
       textStyle = styleGameEnded;
     } else if (gameState === GameState.PlayerTwoWin) {
+      playerTwoWins++;
       text = 'Spieler 2 hat gewonnen!'
       textStyle = styleGameEnded;
     }
 
     return (
-        <div style={textStyle}>
-          {text}
-          <div>
-          <span style={{color: 'yellow', textShadow: '0px 0px 4px black'}}> Spieler 1</span>
-          <span style={{color: 'red', textShadow: '0px 0px 4px black' }}> Spieler 2 </span>
-          </div>
+      <div style={textStyle}>
+        {text}
+        <div>
+          <span className="textYellow"> Spieler 1    - </span>
+          <span>{playerOneWins} : {playerTwoWins}</span>
+          <span className="textRed"> -    Spieler 2 </span>
         </div>
+        <div>
+          <button className="resetButton" onClick={() => this.resetBoard(playerOneWins, playerTwoWins)}> Reset Spielbrett </button>
+        </div>
+      </div>
     )
+  }
+
+  public resetBoard = (currentPlayerOneWins, currentPlayerTwoWins) => {
+
+   this.setState( {
+      board: initializeBoard(),
+      playerTurn: Player.One,
+      gameState: GameState.Ongoing,
+      playerOneWins: currentPlayerOneWins,
+      playerTwoWins: currentPlayerTwoWins,
+    });
   }
 
   public render() {

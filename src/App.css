@@ -45,3 +45,18 @@
 .board > .cell[data-player = 'playerTwo'] {
   background-image: linear-gradient(#fb7272, #da0000);
 }
+
+.textYellow {
+  color: yellow;
+  text-shadow: 0 0 4px black;
+}
+
+.textRed {
+  color: red;
+  text-shadow: 0 0 4px black;
+}
+
+
+.resetButton {
+  padding: 10px;
+}
